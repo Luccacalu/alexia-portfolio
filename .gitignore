@@ -1,0 +1,7 @@
+node_modules
+.next
+out
+.env.local
+studio/node_modules
+studio/dist
+next-env.d.ts
