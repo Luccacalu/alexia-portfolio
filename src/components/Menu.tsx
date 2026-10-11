@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Globe from './Globe';
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
@@ -21,12 +22,7 @@ export default function Menu() {
       <header className={`header ${open ? 'open' : ''}`}>
         <div className="cell l">
           <Link href="/" className="logo" aria-label="Início">
-            <svg viewBox="0 0 40 24" aria-hidden="true">
-              <ellipse cx="20" cy="12" rx="18" ry="10" />
-              <ellipse cx="20" cy="12" rx="8" ry="10" />
-              <line x1="2" y1="12" x2="38" y2="12" />
-              <path d="M5 6.5h30M5 17.5h30" />
-            </svg>
+            <Globe />
           </Link>
         </div>
         <div />
@@ -50,9 +46,15 @@ export default function Menu() {
           agora?
         </h2>
         <nav>
-          <Link href="/projects/" tabIndex={open ? 0 : -1}>Trabalhos</Link>
-          <Link href="/about/" tabIndex={open ? 0 : -1}>Sobre</Link>
-          <Link href="/contact/" tabIndex={open ? 0 : -1}>Contato</Link>
+          <Link href="/projects/" tabIndex={open ? 0 : -1}>
+            Trabalhos
+          </Link>
+          <Link href="/about/" tabIndex={open ? 0 : -1}>
+            Sobre
+          </Link>
+          <Link href="/contact/" tabIndex={open ? 0 : -1}>
+            Contato
+          </Link>
         </nav>
       </div>
     </>

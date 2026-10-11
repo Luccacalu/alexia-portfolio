@@ -1,10 +1,37 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { portableBody } from './portableBody';
 
 export const project = defineType({
   name: 'project',
-  title: 'Projeto',
+  title: 'Projeto / Página',
   type: 'document',
   fields: [
+    defineField({
+      name: 'parent',
+      title: 'Página pai',
+      type: 'reference',
+      to: [{ type: 'project' }],
+      description:
+        'Deixe vazio para aparecer na listagem de trabalhos. Se preenchido, esta página só entra como card dentro da página pai (hierarquia).',
+      options: {
+        disableNew: true,
+        filter: ({ document }) => {
+          const id = document._id.replace(/^drafts\./, '');
+          return {
+            filter: '_type == "project" && !(_id in [$id, $draft])',
+            params: { id, draft: `drafts.${id}` },
+          };
+        },
+      },
+      validation: (Rule) =>
+        Rule.custom((parent, ctx) => {
+          const id = ctx.document?._id?.replace(/^drafts\./, '');
+          if (parent && '_ref' in parent && parent._ref.replace(/^drafts\./, '') === id) {
+            return 'Uma página não pode ser pai de si mesma.';
+          }
+          return true;
+        }),
+    }),
     defineField({ name: 'title', title: 'Título', type: 'string', validation: (r) => r.required() }),
     defineField({
       name: 'slug',
@@ -13,28 +40,34 @@ export const project = defineType({
       options: { source: 'title', maxLength: 80 },
       validation: (r) => r.required(),
     }),
-    defineField({ name: 'client', title: 'Cliente', type: 'string', validation: (r) => r.required() }),
+    defineField({
+      name: 'client',
+      title: 'Cliente',
+      type: 'string',
+      description: 'Obrigatório nas páginas raiz. Nas internas, herda da página pai se ficar vazio.',
+    }),
     defineField({ name: 'agency', title: 'Agência', type: 'string' }),
     defineField({ name: 'year', title: 'Ano', type: 'string' }),
     defineField({
       name: 'order',
-      title: 'Ordem na listagem',
+      title: 'Ordem',
       type: 'number',
-      description: 'Menor número aparece primeiro.',
+      description: 'Menor número aparece primeiro (na listagem ou entre irmãos).',
     }),
     defineField({
       name: 'cover',
       title: 'Imagem de capa',
       type: 'image',
       options: { hotspot: true },
-      description: 'Aparece ao passar o mouse na listagem e no compartilhamento.',
+      description: 'Card na listagem/hover, compartilhamento e topo do artigo.',
     }),
     defineField({
       name: 'cardColor',
       title: 'Cor do card (ao passar o mouse)',
       type: 'string',
       description: 'Código hexadecimal, ex.: #b8ff00. Se vazio, usa verde-limão.',
-      validation: (r) => r.regex(/^#[0-9a-fA-F]{6}$/, { name: 'hex', invert: false }).warning('Use o formato #RRGGBB'),
+      validation: (r) =>
+        r.regex(/^#[0-9a-fA-F]{6}$/, { name: 'hex', invert: false }).warning('Use o formato #RRGGBB'),
     }),
     defineField({
       name: 'categories',
@@ -43,77 +76,20 @@ export const project = defineType({
       of: [defineArrayMember({ type: 'reference', to: [{ type: 'category' }] })],
     }),
     defineField({
-      name: 'blocks',
-      title: 'Conteúdo do projeto',
-      type: 'array',
-      description: 'Monte a página na ordem: textos, imagens e vídeos.',
-      of: [
-        defineArrayMember({
-          name: 'textBlock',
-          title: 'Texto',
-          type: 'object',
-          fields: [defineField({ name: 'text', title: 'Texto', type: 'text', rows: 5 })],
-          preview: { select: { title: 'text' }, prepare: ({ title }) => ({ title: title || 'Texto', subtitle: 'Texto' }) },
-        }),
-        defineArrayMember({
-          name: 'imageBlock',
-          title: 'Imagem',
-          type: 'object',
-          fields: [
-            defineField({ name: 'image', title: 'Imagem', type: 'image', options: { hotspot: true } }),
-            defineField({ name: 'alt', title: 'Texto alternativo', type: 'string' }),
-            defineField({ name: 'fullWidth', title: 'Largura total', type: 'boolean', initialValue: true }),
-          ],
-          preview: { select: { media: 'image', title: 'alt' }, prepare: ({ media, title }) => ({ media, title: title || 'Imagem', subtitle: 'Imagem' }) },
-        }),
-        defineArrayMember({
-          name: 'videoBlock',
-          title: 'Vídeo (Vimeo/YouTube)',
-          type: 'object',
-          fields: [
-            defineField({ name: 'url', title: 'Link do vídeo', type: 'url' }),
-            defineField({
-              name: 'background',
-              title: 'Rodar como fundo (sem controles, mudo, em loop)',
-              type: 'boolean',
-              initialValue: false,
-            }),
-          ],
-          preview: { select: { title: 'url' }, prepare: ({ title }) => ({ title: title || 'Vídeo', subtitle: 'Vídeo' }) },
-        }),
-      ],
+      name: 'lede',
+      title: 'Abertura (opcional)',
+      type: 'text',
+      rows: 3,
+      description: 'Linha de apoio logo abaixo do título, antes do artigo.',
     }),
-    defineField({
-      name: 'stats',
-      title: 'Resultados (números)',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({ name: 'value', title: 'Valor', type: 'string' }),
-            defineField({ name: 'label', title: 'Rótulo', type: 'string' }),
-          ],
-          preview: { select: { title: 'value', subtitle: 'label' } },
-        }),
-      ],
-    }),
-    defineField({ name: 'closing', title: 'Frase final', type: 'string' }),
-    defineField({
-      name: 'crew',
-      title: 'Ficha técnica',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'object',
-          fields: [
-            defineField({ name: 'role', title: 'Função', type: 'string' }),
-            defineField({ name: 'names', title: 'Nomes', type: 'array', of: [{ type: 'string' }] }),
-          ],
-          preview: { select: { title: 'role' } },
-        }),
-      ],
-    }),
+    portableBody,
   ],
-  preview: { select: { title: 'title', subtitle: 'client', media: 'cover' } },
+  preview: {
+    select: { title: 'title', subtitle: 'client', media: 'cover', parent: 'parent.title' },
+    prepare: ({ title, subtitle, media, parent }) => ({
+      title,
+      subtitle: parent ? `↳ ${parent}${subtitle ? ' · ' + subtitle : ''}` : subtitle,
+      media,
+    }),
+  },
 });

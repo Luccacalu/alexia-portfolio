@@ -3,7 +3,7 @@
 Site estático (Next.js 14, export estático) + CMS headless (Sanity, plano gratuito) + hospedagem gratuita (Cloudflare Pages, permite uso comercial).
 
 ## Páginas
-`/` Home · `/projects/` Cards de projetos (hover com resumo) · `/project/[slug]/` Projeto · `/categories/` Filtro por categoria · `/about/` Sobre · `/contact/` Contato
+`/` Home · `/projects/` Cards de projetos (hover com resumo) · `/project/.../` Artigo do projeto (pode ter níveis: `/project/pai/filho/`) · `/categories/` Filtro por categoria · `/about/` Sobre · `/contact/` Contato
 
 ## 1. Rodar agora (dados de exemplo)
 ```bash
@@ -70,7 +70,7 @@ O site é estático: ao publicar no Sanity ele precisa ser reconstruído.
 
 ## Estrutura do CMS (o que o cliente edita)
 - **Configurações do site** (documento único): nome, textos da home e do Sobre, foto, currículo, clientes (logos), prêmios, e-mail e redes.
-- **Projetos**: título, slug, cliente, agência, ano, ordem, capa, **cor do card no hover**, categorias, conteúdo em blocos (texto / imagem / vídeo), resultados, frase final e ficha técnica.
+- **Projetos**: metadados do card (título, slug, cliente, agência, ano, capa, cor do hover, categorias) + **artigo livre** (Portable Text: texto formatado, títulos, citações, imagens, galeria, vídeo, cards para outras páginas). Campo **Página pai** cria hierarquia: a página some da listagem e aparece como card dentro do pai.
 - **Categorias**.
 
 ## Cards de projeto (aba Trabalhos)

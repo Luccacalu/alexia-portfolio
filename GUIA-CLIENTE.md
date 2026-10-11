@@ -7,7 +7,8 @@ Você edita no painel e clica em **Publish** (Publicar). Em cerca de 1–2 minut
 
 ## Menu lateral
 - **Configurações do site**: seu nome, textos da página inicial e do Sobre, foto, experiência/formação, clientes, prêmios, e-mail e redes sociais.
-- **Projetos**: um item por trabalho.
+- **Projetos (listagem)**: trabalhos que aparecem em /trabalhos.
+- **Páginas internas**: capítulos, peças, making of — ligados a um projeto pai.
 - **Categorias**: os filtros (ex.: digital, filme, branding).
 
 ## Adicionar um projeto
@@ -16,12 +17,14 @@ Você edita no painel e clica em **Publish** (Publicar). Em cerca de 1–2 minut
 3. **Imagem de capa**: aparece na grade de trabalhos. Use imagens horizontais (proporção 3:2, ex.: 1800×1200 px).
 4. **Cor do card**: cor que aparece quando o mouse passa sobre a capa (ex.: `#b8ff00`). Vazio = verde-limão.
 5. **Categorias**: adicione as que se aplicam.
-6. **Conteúdo do projeto**: clique em *Add item* e monte a página na ordem que quiser:
-   - **Texto**: parágrafos explicando a ideia.
-   - **Imagem**: envie a imagem; desmarque "Largura total" para ficar em duas colunas.
-   - **Vídeo**: cole o link do Vimeo ou YouTube.
-7. **Resultados**, **Frase final** e **Ficha técnica** são opcionais.
-8. Clique em **Publish**.
+6. **Abertura** (opcional): uma frase logo abaixo do título.
+7. **Artigo**: é um editor livre. Escreva e formate o texto (títulos, negrito, listas, citações) e, no mesmo fluxo, insira:
+   - **Imagem** (largura do texto, ampla ou tela inteira)
+   - **Galeria**
+   - **Vídeo** (cole o link do Vimeo ou YouTube)
+   - **Cards para outras páginas** — escolha páginas internas para aprofundar a história
+8. **Página pai**: deixe vazio para o trabalho aparecer na listagem. Se escolher um projeto pai, esta página vira um card dentro dele (e pode ter os próprios filhos).
+9. Clique em **Publish**.
 
 ## Mudar a ordem dos projetos
 Use o campo **Ordem na listagem** (1 aparece primeiro, 2 depois…).

@@ -1,9 +1,15 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import '@fontsource/instrument-serif/400.css';
 import '@fontsource-variable/inter';
 import './globals.css';
 import Menu from '@/components/Menu';
 import { getSettings } from '@/lib/sanity';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0e0e0e',
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();

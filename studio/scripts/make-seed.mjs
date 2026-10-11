@@ -1,12 +1,20 @@
 // Gera studio/seed.ndjson a partir dos dados de exemplo do site.
 // Uso: node studio/scripts/make-seed.mjs   (Node 22.18+)
 import { writeFileSync } from 'node:fs';
-import { sampleProjects, sampleSettings } from '../../src/lib/sample.ts';
+import { sampleAllProjects, sampleSettings } from '../../src/lib/sample.ts';
 
-const k = (() => { let i = 0; return () => `k${(i++).toString(36)}`; })();
-const slugify = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const k = (() => {
+  let i = 0;
+  return () => `k${(i++).toString(36)}`;
+})();
+const slugify = (s) =>
+  s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-');
 
-const cats = [...new Set(sampleProjects.flatMap((p) => p.categories))];
+const cats = [...new Set(sampleAllProjects.flatMap((p) => p.categories))];
 const docs = [];
 
 cats.forEach((c) => docs.push({ _id: `category-${slugify(c)}`, _type: 'category', title: c }));
@@ -20,35 +28,67 @@ docs.push({
   lastName: sampleSettings.lastName,
   role: sampleSettings.role,
   heroIntro: sampleSettings.heroIntro,
+  beginLead: sampleSettings.beginLead,
+  beginQuestion: sampleSettings.beginQuestion,
   aboutIntro: sampleSettings.aboutIntro,
   sections: sampleSettings.sections.map((s) => ({
-    _key: k(), title: s.title, items: s.items.map((i) => ({ _key: k(), ...i })),
+    _key: k(),
+    title: s.title,
+    items: s.items.map((i) => ({ _key: k(), ...i })),
   })),
   awardGroups: sampleSettings.awardGroups.map((g) => ({
-    _key: k(), title: g.title, awards: g.awards.map((a) => ({ _key: k(), ...a })),
+    _key: k(),
+    title: g.title,
+    awards: g.awards.map((a) => ({ _key: k(), ...a })),
   })),
   email: sampleSettings.email,
   socials: sampleSettings.socials.map((s) => ({ _key: k(), ...s })),
 });
 
-sampleProjects.forEach((p, idx) =>
+const toSeedBody = (body) =>
+  body
+    .map((b) => {
+      if (b._type === 'block') {
+        return {
+          _key: k(),
+          _type: 'block',
+          style: b.style || 'normal',
+          markDefs: [],
+          children: (b.children || []).map((c) => ({
+            _key: k(),
+            _type: 'span',
+            text: c.text,
+            marks: c.marks || [],
+          })),
+        };
+      }
+      if (b._type === 'cards') return null;
+      if (b._type === 'figure' || b._type === 'gallery' || b._type === 'video') return null;
+      return { _key: k(), ...b };
+    })
+    .filter(Boolean);
+
+sampleAllProjects.forEach((p, idx) =>
   docs.push({
     _id: `project-${p.slug}`,
     _type: 'project',
     title: p.title,
     slug: { _type: 'slug', current: p.slug },
-    client: p.client,
+    client: p.client || undefined,
     agency: p.agency,
     year: p.year,
     order: idx + 1,
     cardColor: p.cardColor,
-    categories: p.categories.map((c) => ({ _key: k(), _type: 'reference', _ref: `category-${slugify(c)}` })),
-    blocks: p.blocks
-      .filter((b) => b._type === 'textBlock')
-      .map((b) => ({ _key: k(), _type: 'textBlock', text: b.text })),
-    stats: p.stats.map((s) => ({ _key: k(), ...s })),
-    closing: p.closing,
-    crew: p.crew.map((c) => ({ _key: k(), role: c.role, names: c.names })),
+    lede: p.lede,
+    parent: p.parentSlug
+      ? { _type: 'reference', _ref: `project-${p.parentSlug}` }
+      : undefined,
+    categories: p.categories.map((c) => ({
+      _key: k(),
+      _type: 'reference',
+      _ref: `category-${slugify(c)}`,
+    })),
+    body: toSeedBody(p.body),
   })
 );
 

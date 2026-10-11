@@ -19,7 +19,23 @@ export default defineConfig({
               .id('siteSettings')
               .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
             S.divider(),
-            S.documentTypeListItem('project').title('Projetos'),
+            S.listItem()
+              .title('Projetos (listagem)')
+              .schemaType('project')
+              .child(
+                S.documentTypeList('project')
+                  .title('Projetos')
+                  .filter('_type == "project" && !defined(parent)')
+              ),
+            S.listItem()
+              .title('Páginas internas')
+              .schemaType('project')
+              .child(
+                S.documentTypeList('project')
+                  .title('Páginas internas')
+                  .filter('_type == "project" && defined(parent)')
+              ),
+            S.documentTypeListItem('project').title('Todas as páginas'),
             S.documentTypeListItem('category').title('Categorias'),
           ]),
     }),

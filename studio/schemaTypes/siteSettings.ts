@@ -27,6 +27,19 @@ export const siteSettings = defineType({
     defineField({ name: 'lastName', title: 'Sobrenome', type: 'string', group: 'geral' }),
     defineField({ name: 'role', title: 'Cargo', type: 'string', group: 'geral' }),
     defineField({ name: 'heroIntro', title: 'Texto de abertura da home', type: 'text', rows: 3, group: 'geral' }),
+    defineField({
+      name: 'beginLead',
+      title: 'Texto abaixo do nome (home)',
+      type: 'text',
+      rows: 3,
+      group: 'geral',
+    }),
+    defineField({
+      name: 'beginQuestion',
+      title: 'Pergunta da home',
+      type: 'string',
+      group: 'geral',
+    }),
 
     defineField({ name: 'aboutIntro', title: 'Texto de apresentação', type: 'text', rows: 8, group: 'sobre' }),
     defineField({ name: 'portrait', title: 'Foto', type: 'image', options: { hotspot: true }, group: 'sobre' }),
