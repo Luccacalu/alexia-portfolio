@@ -60,6 +60,15 @@ Durante `npm run dev`, o site consulta o Sanity sem cache e atualiza a página a
 No painel https://www.sanity.io/manage → seu projeto → **Members → Invite**: convide o e-mail do cliente com o papel **Editor** (edita e publica conteúdo, mas não mexe em configurações do projeto). Mantenha-se como Administrator.
 Envie ao cliente o link `https://NOME.sanity.studio` e o arquivo `GUIA-CLIENTE.md`.
 
+## Deploy na Vercel (Next.js + Studio)
+1. Importe o repositório como um único projeto, mantendo o **Root Directory** na raiz. O `vercel.json` configura os serviços `app` e `studio`.
+2. O site Next.js fica no domínio raiz; o Sanity Studio é publicado em `/studio`. O dataset do Sanity precisa ser público: o site busca os dados diretamente na API do Sanity durante o build estático, então não há binding entre os serviços nem token de API no front end.
+3. Cadastre as variáveis abaixo nas configurações do projeto Vercel, em Production e Preview:
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID` e `NEXT_PUBLIC_SANITY_DATASET` para o build do site.
+   - `NEXT_PUBLIC_SITE_URL` com a URL pública do site.
+   - `SANITY_STUDIO_PROJECT_ID` e `SANITY_STUDIO_DATASET` para o build do Studio.
+4. Faça o deploy e acesse `/studio` no domínio do projeto para abrir o painel. Para reconstruir o site quando o conteúdo for publicado, configure um webhook do Sanity para um Deploy Hook da Vercel, filtrando documentos `project`, `category` e `siteSettings`.
+
 ## 3. Hospedar (Cloudflare Pages)
 1. Suba esta pasta para um repositório no GitHub (o `.gitignore` já exclui `node_modules`, `out` e `.env.local`).
 2. Cloudflare → Workers & Pages → Create → Pages → conecte o repositório.

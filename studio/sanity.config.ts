@@ -5,6 +5,7 @@ import { schemaTypes } from './schemaTypes';
 export default defineConfig({
   name: 'default',
   title: 'Portfólio',
+  basePath: '/studio',
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'SEU_PROJECT_ID',
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',
   plugins: [

@@ -93,11 +93,6 @@ export const portableBody = defineField({
                 defineField({ name: 'caption', title: 'Legenda', type: 'string' }),
               ],
             }),
-            defineArrayMember({
-              type: 'file',
-              title: 'Vídeo',
-              options: { accept: 'video/*' },
-            }),
           ],
         }),
       ],
@@ -127,13 +122,18 @@ export const portableBody = defineField({
                 defineField({ name: 'caption', title: 'Legenda', type: 'string' }),
               ],
             }),
+            defineArrayMember({
+              type: 'file',
+              title: 'Vídeo',
+              options: { accept: 'video/*' },
+            }),
           ],
           validation: (Rule) => Rule.min(1),
         }),
       ],
       preview: {
         select: { title: 'title', media: 'images.0' },
-        prepare: ({ title, media }) => ({ title: title || 'Carrossel', subtitle: 'Carrossel de imagens', media }),
+        prepare: ({ title, media }) => ({ title: title || 'Carrossel', subtitle: 'Carrossel misto', media }),
       },
     }),
     defineArrayMember({
