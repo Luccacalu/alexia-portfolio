@@ -82,6 +82,76 @@ export const project = defineType({
       rows: 3,
       description: 'Linha de apoio logo abaixo do título, antes do artigo.',
     }),
+    defineField({
+      name: 'videos',
+      title: 'Vídeos',
+      type: 'array',
+      description: 'Adicione vídeos com título e roteiro opcional. Os itens aparecem nesta ordem.',
+      of: [
+        defineArrayMember({
+          name: 'videoStory',
+          title: 'Vídeo com roteiro',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Título do vídeo (opcional)', type: 'string' }),
+            defineField({
+              name: 'video',
+              title: 'Arquivo de vídeo',
+              type: 'file',
+              options: { accept: 'video/*' },
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'metrics',
+              title: 'Métricas (opcional)',
+              type: 'object',
+              description: 'Preencha apenas os números disponíveis; campos vazios não aparecem no site.',
+              fields: [
+                defineField({ name: 'views', title: 'Visualizações', type: 'number', validation: (Rule) => Rule.integer().min(0) }),
+                defineField({ name: 'likes', title: 'Likes', type: 'number', validation: (Rule) => Rule.integer().min(0) }),
+                defineField({ name: 'shares', title: 'Compartilhamentos', type: 'number', validation: (Rule) => Rule.integer().min(0) }),
+                defineField({ name: 'comments', title: 'Comentários', type: 'number', validation: (Rule) => Rule.integer().min(0) }),
+              ],
+            }),
+            defineField({
+              name: 'story',
+              title: 'Stories (opcional)',
+              type: 'object',
+              description: 'Envie uma capa para mostrar a bolinha. Este vídeo será o primeiro story; adicione outros clipes abaixo.',
+              fields: [
+                defineField({
+                  name: 'label',
+                  title: 'Nome abaixo da bolinha (opcional)',
+                  type: 'string',
+                  placeholder: 'Story',
+                }),
+                defineField({
+                  name: 'cover',
+                  title: 'Foto da bolinha',
+                  type: 'image',
+                  options: { hotspot: true },
+                }),
+                defineField({
+                  name: 'clips',
+                  title: 'Clipes adicionais',
+                  type: 'array',
+                  of: [defineArrayMember({ type: 'file', options: { accept: 'video/*' } })],
+                }),
+              ],
+            }),
+            portableBody,
+          ],
+          preview: {
+            select: { title: 'title', media: 'video.asset' },
+            prepare: ({ title, media }) => ({
+              title: title || 'Vídeo sem título',
+              subtitle: 'Vídeo e roteiro',
+              media,
+            }),
+          },
+        }),
+      ],
+    }),
     portableBody,
   ],
   preview: {

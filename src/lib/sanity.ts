@@ -9,6 +9,7 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
 const client = projectId
   ? createClient({ projectId, dataset, apiVersion: '2024-10-01', useCdn: false })
   : null;
+const fetchOptions = process.env.NODE_ENV === 'development' ? { cache: 'no-store' as const } : undefined;
 
 const img = (url?: string) => (url ? `${url}?auto=format&w=2000` : '');
 
@@ -24,11 +25,65 @@ const PROJECT_QUERY = `*[_type == "project"] | order(order asc, year desc){
   ${CARD_PROJECTION},
   "categories": categories[]->title,
   lede,
+  videos[]{
+    _key,
+    title,
+    "url": video.asset->url,
+    "mimeType": video.asset->mimeType,
+    "filename": video.asset->originalFilename,
+    metrics{views, likes, shares, comments},
+    story{
+      label,
+      "coverUrl": cover.asset->url,
+      clips[]{
+        _key,
+        "url": asset->url,
+        "mimeType": asset->mimeType,
+        "filename": asset->originalFilename
+      }
+    },
+    body[]{
+      ...,
+      _type == "image" => { ..., "url": asset->url },
+      _type == "audio" => {
+        ...,
+        "url": file.asset->url,
+        "mimeType": file.asset->mimeType,
+        "filename": file.asset->originalFilename
+      },
+      _type == "gallery" => {
+        images[]{ "url": asset->url, alt, caption }
+      },
+      _type == "carousel" => {
+        title,
+        description,
+        images[]{
+          _key,
+          _type,
+          _type == "image" => {
+            "url": asset->url,
+            "aspectRatio": asset->metadata.dimensions.aspectRatio,
+            alt,
+            caption
+          },
+          _type == "file" => {
+            "url": asset->url,
+            "mimeType": asset->mimeType,
+            "filename": asset->originalFilename
+          }
+        }
+      },
+      _type == "cards" => {
+        heading,
+        "items": items[]->{ ${CARD_PROJECTION} }
+      }
+    }
+  },
   body[]{
     ...,
-    _type == "figure" => {
+    _type == "image" => {
       ...,
-      "url": image.asset->url
+      "url": asset->url
     },
     _type == "gallery" => {
       images[]{
@@ -37,17 +92,35 @@ const PROJECT_QUERY = `*[_type == "project"] | order(order asc, year desc){
         caption
       }
     },
+    _type == "carousel" => {
+      title,
+      description,
+      images[]{
+        _key,
+          _type,
+          _type == "image" => {
+            "url": asset->url,
+            "aspectRatio": asset->metadata.dimensions.aspectRatio,
+            alt,
+            caption
+          },
+          _type == "file" => {
+            "url": asset->url,
+            "mimeType": asset->mimeType,
+            "filename": asset->originalFilename
+          }
+      }
+    },
+    _type == "audio" => {
+      ...,
+      "url": file.asset->url,
+      "mimeType": file.asset->mimeType,
+      "filename": file.asset->originalFilename
+    },
     _type == "cards" => {
       heading,
       "items": items[]->{ ${CARD_PROJECTION} }
-    },
-    _type == "imageBlock" => {
-      _key, _type,
-      "url": image.asset->url,
-      alt, fullWidth
-    },
-    _type == "videoBlock" => { _key, _type, url, background },
-    _type == "textBlock" => { _key, _type, text }
+    }
   }
 }`;
 
@@ -75,14 +148,30 @@ function mapCard(c: any): Omit<ProjectCardData, 'path'> {
 
 function mapBody(body: any[] | undefined, pathBySlug: Map<string, string>): BodyBlock[] {
   return (body ?? []).map((b) => {
-    if (b._type === 'figure') {
-      return { ...b, url: img(b.url), layout: b.layout || 'wide' };
+    if (b._type === 'image') {
+      return {
+        _key: b._key,
+        _type: 'figure',
+        url: img(b.url),
+        alt: b.alt,
+        caption: b.caption,
+        layout: b.layout || 'wide',
+      };
     }
     if (b._type === 'gallery') {
       return {
         ...b,
         images: (b.images ?? []).map((im: any) => ({ ...im, url: img(im.url) })),
       };
+    }
+    if (b._type === 'carousel') {
+      return {
+        ...b,
+        images: (b.images ?? []).map((im: any) => ({ ...im, url: img(im.url) })),
+      };
+    }
+    if (b._type === 'audio') {
+      return { ...b, url: img(b.url) };
     }
     if (b._type === 'cards') {
       return {
@@ -94,27 +183,6 @@ function mapBody(body: any[] | undefined, pathBySlug: Map<string, string>): Body
             path: pathBySlug.get(it.slug) || `/project/${it.slug}/`,
             parentSlug: it.parentSlug,
           })),
-      };
-    }
-    if (b._type === 'imageBlock') {
-      return {
-        _key: b._key,
-        _type: 'figure',
-        url: img(b.url),
-        alt: b.alt,
-        layout: b.fullWidth === false ? 'content' : 'wide',
-      };
-    }
-    if (b._type === 'videoBlock') {
-      return { _key: b._key, _type: 'video', url: b.url };
-    }
-    if (b._type === 'textBlock' && b.text) {
-      return {
-        _key: b._key,
-        _type: 'block',
-        style: 'normal',
-        markDefs: [],
-        children: [{ _key: `${b._key}-s`, _type: 'span', text: b.text, marks: [] }],
       };
     }
     return b;
@@ -130,6 +198,7 @@ function normalize(raw: any[]): Project[] {
       categories: p.categories ?? [],
       lede: p.lede || undefined,
       body: p.body ?? [],
+      videos: p.videos ?? [],
     }));
   const withPath = withPaths(drafts);
   const pathBySlug = new Map(withPath.map((p) => [p.slug, p.path]));
@@ -137,13 +206,25 @@ function normalize(raw: any[]): Project[] {
     ...p,
     coverUrl: p.coverUrl,
     body: mapBody(p.body as any[], pathBySlug),
+    videos: p.videos
+      .filter((video: any) => video?.url)
+      .map((video: any) => ({
+        ...video,
+        body: mapBody(video.body, pathBySlug),
+        story: video.story
+          ? {
+              ...video.story,
+              clips: (video.story.clips ?? []).filter((clip: any) => clip?.url),
+            }
+          : undefined,
+      })),
   }));
   return inheritMeta(mapped);
 }
 
 export async function getAllProjects(): Promise<Project[]> {
   if (!client) return sampleAllProjects;
-  const raw: any[] = await client.fetch(PROJECT_QUERY);
+  const raw: any[] = await client.fetch(PROJECT_QUERY, {}, fetchOptions);
   return raw?.length ? normalize(raw) : sampleAllProjects;
 }
 
@@ -172,7 +253,7 @@ export async function getProject(slugPath: string[]) {
 
 export async function getSettings(): Promise<Settings> {
   if (!client) return sampleSettings;
-  const s: any = await client.fetch(SETTINGS_QUERY);
+  const s: any = await client.fetch(SETTINGS_QUERY, {}, fetchOptions);
   if (!s) return sampleSettings;
   return {
     ...sampleSettings,

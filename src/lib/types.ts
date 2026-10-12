@@ -30,11 +30,68 @@ export type GalleryBlock = {
   images: { url?: string; alt?: string; caption?: string }[];
 };
 
+export type CarouselBlock = {
+  _key: string;
+  _type: 'carousel';
+  title?: string;
+  description?: string;
+  images: CarouselSlide[];
+};
+
+export type CarouselImageSlide = {
+  _key?: string;
+  _type?: 'image';
+  url?: string;
+  alt?: string;
+  caption?: string;
+  aspectRatio?: number;
+};
+
+export type CarouselVideoSlide = {
+  _key?: string;
+  _type: 'file';
+  url?: string;
+  mimeType?: string;
+  filename?: string;
+};
+
+export type CarouselSlide = CarouselImageSlide | CarouselVideoSlide;
+
+export type AudioBlock = {
+  _key: string;
+  _type: 'audio';
+  title?: string;
+  description?: string;
+  url: string;
+  mimeType?: string;
+  filename?: string;
+};
+
 export type VideoBlock = {
   _key: string;
   _type: 'video';
   url: string;
   caption?: string;
+};
+
+export type ProjectVideo = {
+  _key: string;
+  title?: string;
+  url: string;
+  mimeType?: string;
+  filename?: string;
+  metrics?: {
+    views?: number;
+    likes?: number;
+    shares?: number;
+    comments?: number;
+  };
+  story?: {
+    label?: string;
+    coverUrl?: string;
+    clips: { _key?: string; url: string; mimeType?: string; filename?: string }[];
+  };
+  body: BodyBlock[];
 };
 
 export type CardsBlock = {
@@ -44,7 +101,7 @@ export type CardsBlock = {
   items: ProjectCardData[];
 };
 
-export type BodyBlock = PortableTextBlock | FigureBlock | GalleryBlock | VideoBlock | CardsBlock;
+export type BodyBlock = PortableTextBlock | FigureBlock | GalleryBlock | CarouselBlock | AudioBlock | VideoBlock | CardsBlock;
 
 export type ProjectCardData = {
   slug: string;
@@ -62,6 +119,7 @@ export type Project = ProjectCardData & {
   categories: string[];
   lede?: string;
   body: BodyBlock[];
+  videos?: ProjectVideo[];
 };
 
 export type LabelItem = { label: string; detail?: string };

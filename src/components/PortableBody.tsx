@@ -1,5 +1,7 @@
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
-import type { BodyBlock, CardsBlock, FigureBlock, GalleryBlock, VideoBlock } from '@/lib/types';
+import type { AudioBlock, BodyBlock, CarouselBlock, CardsBlock, FigureBlock, GalleryBlock, VideoBlock } from '@/lib/types';
+import { AudioPlayer } from './AudioPlayer';
+import { ImageCarousel } from './ImageCarousel';
 import { ProjectGrid } from './ProjectCard';
 
 export function toEmbed(url: string): string {
@@ -108,6 +110,8 @@ const components: PortableTextComponents = {
   types: {
     figure: ({ value }) => <Figure value={value} />,
     gallery: ({ value }) => <Gallery value={value} />,
+    carousel: ({ value }) => <ImageCarousel value={value as CarouselBlock} />,
+    audio: ({ value }) => <AudioPlayer value={value as AudioBlock} />,
     video: ({ value }) => <Video value={value} />,
     cards: ({ value }) => <Cards value={value} />,
   },

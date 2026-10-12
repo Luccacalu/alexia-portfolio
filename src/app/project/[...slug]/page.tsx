@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PortableBody } from '@/components/PortableBody';
+import { ProjectVideos } from '@/components/ProjectVideos';
 import { ProjectGrid } from '@/components/ProjectCard';
 import { crumbsFor } from '@/lib/paths';
 import { getAllProjects, getProject } from '@/lib/sanity';
@@ -58,14 +59,9 @@ export default async function ProjectPage({ params }: { params: { slug: string[]
       <h1 className="display article-title">{p.title}</h1>
       {p.lede && <p className="article-lede">{p.lede}</p>}
 
-      {p.coverUrl && (
-        <div className="article-cover">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={p.coverUrl} alt="" />
-        </div>
-      )}
-
       <PortableBody value={p.body} />
+
+      <ProjectVideos videos={p.videos || []} storageScope={p.path} />
 
       {extraChildren.length > 0 && (
         <section className="article-children">

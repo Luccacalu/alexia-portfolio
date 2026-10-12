@@ -21,10 +21,13 @@ Você edita no painel e clica em **Publish** (Publicar). Em cerca de 1–2 minut
 7. **Artigo**: é um editor livre. Escreva e formate o texto (títulos, negrito, listas, citações) e, no mesmo fluxo, insira:
    - **Imagem** (largura do texto, ampla ou tela inteira)
    - **Galeria**
+   - **Carrossel** — adicione imagens e vídeos em qualquer ordem; título e descrição são opcionais. No site, passe pelos slides com as setas ou deslizando; imagens altas e largas são ajustadas sem cortes. Vídeos iniciam sem som quando chegam ao slide ativo e, ao terminar, o próximo slide é exibido.
+   - **Áudio** — envie um arquivo e, se quiser, informe título e descrição. Cada faixa tem controles próprios de play/pause e posição.
    - **Vídeo** (cole o link do Vimeo ou YouTube)
    - **Cards para outras páginas** — escolha páginas internas para aprofundar a história
-8. **Página pai**: deixe vazio para o trabalho aparecer na listagem. Se escolher um projeto pai, esta página vira um card dentro dele (e pode ter os próprios filhos).
-9. Clique em **Publish**.
+8. **Vídeos e roteiros** (opcional): adicione um item para cada vídeo, envie o arquivo, dê um título se quiser e escreva o roteiro no corpo associado. Os itens aparecem na ordem da lista; arraste para reordenar. O player se ajusta à proporção do arquivo, inclusive vertical. Preencha somente as métricas disponíveis (visualizações, likes, compartilhamentos e comentários); valores vazios não aparecem no site. Para criar um Story, preencha **Foto da bolinha** e envie um ou mais arquivos em **Clipes adicionais**. O **Nome abaixo da bolinha** é opcional e, se ficar vazio, aparece “Story”. Só os clipes adicionais aparecem ao abrir a bolinha; o vídeo principal não entra na sequência. Os clipes podem ser avançados ou revisitados, e o estado visto fica salvo neste navegador. Para maior compatibilidade entre navegadores, prefira MP4 com vídeo H.264.
+9. **Página pai**: deixe vazio para o trabalho aparecer na listagem. Se escolher um projeto pai, esta página vira um card dentro dele (e pode ter os próprios filhos).
+10. Clique em **Publish**.
 
 ## Mudar a ordem dos projetos
 Use o campo **Ordem na listagem** (1 aparece primeiro, 2 depois…).

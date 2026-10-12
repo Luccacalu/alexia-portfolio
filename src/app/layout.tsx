@@ -3,6 +3,7 @@ import '@fontsource/instrument-serif/400.css';
 import '@fontsource-variable/inter';
 import './globals.css';
 import Menu from '@/components/Menu';
+import { DevSanityRefresh } from '@/components/DevSanityRefresh';
 import { getSettings } from '@/lib/sanity';
 
 export const viewport: Viewport = {
@@ -29,6 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div className="frame">
           <Menu />
+          <DevSanityRefresh
+            enabled={process.env.NODE_ENV === 'development' && Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID)}
+          />
           {children}
         </div>
       </body>

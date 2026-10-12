@@ -47,6 +47,15 @@ npm run build        # gera ./out com o conteúdo do Sanity
 ```
 O dataset precisa ser **público** (padrão de um dataset novo), pois o site lê os dados no momento do build, sem token.
 
+Se projetos ainda tiverem os campos antigos `blocks`, `closing`, `crew` ou `stats`, rode a migração antes de removê-los:
+```bash
+cd studio
+npm run migrate:legacy-content
+```
+O comando mostra uma prévia primeiro. Depois de conferir, defina `SANITY_MIGRATION_APPLY=1` no ambiente e rode novamente para gravar a conversão no campo único **Artigo** (`body`), incluindo imagens antigas como itens `image` nativos. Nesse corpo, parágrafos, títulos, imagens, vídeos, galerias e cards podem ser inseridos quantas vezes quiser e em qualquer ordem.
+
+Durante `npm run dev`, o site consulta o Sanity sem cache e atualiza a página aberta a cada 5 segundos; publique no Studio e aguarde alguns segundos. Isso vale apenas para desenvolvimento local. A versão exportada/hospedada continua estática e precisa de uma nova build após cada publicação.
+
 ### 2.5 Dar acesso ao cliente
 No painel https://www.sanity.io/manage → seu projeto → **Members → Invite**: convide o e-mail do cliente com o papel **Editor** (edita e publica conteúdo, mas não mexe em configurações do projeto). Mantenha-se como Administrator.
 Envie ao cliente o link `https://NOME.sanity.studio` e o arquivo `GUIA-CLIENTE.md`.
@@ -70,7 +79,7 @@ O site é estático: ao publicar no Sanity ele precisa ser reconstruído.
 
 ## Estrutura do CMS (o que o cliente edita)
 - **Configurações do site** (documento único): nome, textos da home e do Sobre, foto, currículo, clientes (logos), prêmios, e-mail e redes.
-- **Projetos**: metadados do card (título, slug, cliente, agência, ano, capa, cor do hover, categorias) + **artigo livre** (Portable Text: texto formatado, títulos, citações, imagens, galeria, vídeo, cards para outras páginas). Campo **Página pai** cria hierarquia: a página some da listagem e aparece como card dentro do pai.
+- **Projetos**: metadados do card (título, slug, cliente, agência, ano, capa, cor do hover, categorias) + **artigo livre** (Portable Text: texto formatado, títulos, citações, imagens, galerias, carrosséis, áudios, vídeos externos e cards para outras páginas). Carrosséis podem ser adicionados quantas vezes quiser com imagens e vídeos em qualquer ordem; a altura é limitada e a largura acompanha a proporção para não cortar imagens. Vídeos começam sem som no slide ativo e avançam ao terminar. Cada bloco de áudio tem player e seek próprios, com título e descrição opcionais. O campo **Vídeos e roteiros** aceita quantos itens forem necessários; cada um tem upload, título opcional, corpo Portable Text e métricas opcionais. Para criar um Story, adicione uma foto de capa e pelo menos um clipe extra no vídeo; somente esses clipes aparecem no modal. O estado visto fica guardado neste navegador. Campo **Página pai** cria hierarquia: a página some da listagem e aparece como card dentro do pai.
 - **Categorias**.
 
 ## Cards de projeto (aba Trabalhos)

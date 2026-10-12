@@ -5,7 +5,7 @@ export const portableBody = defineField({
   title: 'Artigo',
   type: 'array',
   description:
-    'Corpo livre do artigo: texto formatado, títulos, citações, imagens, vídeos e cards para páginas mais profundas.',
+    'Corpo livre: texto formatado, títulos, imagens, galerias, carrosséis, áudios, vídeos e cards para páginas mais profundas.',
   of: [
     defineArrayMember({
       type: 'block',
@@ -45,11 +45,10 @@ export const portableBody = defineField({
       },
     }),
     defineArrayMember({
-      name: 'figure',
+      type: 'image',
       title: 'Imagem',
-      type: 'object',
+      options: { hotspot: true },
       fields: [
-        defineField({ name: 'image', title: 'Imagem', type: 'image', options: { hotspot: true } }),
         defineField({ name: 'alt', title: 'Texto alternativo', type: 'string' }),
         defineField({ name: 'caption', title: 'Legenda', type: 'string' }),
         defineField({
@@ -68,7 +67,7 @@ export const portableBody = defineField({
         }),
       ],
       preview: {
-        select: { media: 'image', title: 'alt', caption: 'caption' },
+        select: { media: 'asset', title: 'alt', caption: 'caption' },
         prepare: ({ media, title, caption }) => ({
           media,
           title: title || caption || 'Imagem',
@@ -94,12 +93,67 @@ export const portableBody = defineField({
                 defineField({ name: 'caption', title: 'Legenda', type: 'string' }),
               ],
             }),
+            defineArrayMember({
+              type: 'file',
+              title: 'Vídeo',
+              options: { accept: 'video/*' },
+            }),
           ],
         }),
       ],
       preview: {
         select: { media: 'images.0' },
         prepare: ({ media }) => ({ media, title: 'Galeria' }),
+      },
+    }),
+    defineArrayMember({
+      name: 'carousel',
+      title: 'Carrossel',
+      type: 'object',
+      fields: [
+        defineField({ name: 'title', title: 'Título (opcional)', type: 'string' }),
+        defineField({ name: 'description', title: 'Descrição (opcional)', type: 'text', rows: 2 }),
+        defineField({
+          name: 'images',
+          title: 'Slides (imagens e vídeos)',
+          type: 'array',
+          description: 'Adicione imagens e/ou arquivos de vídeo em qualquer ordem.',
+          of: [
+            defineArrayMember({
+              type: 'image',
+              options: { hotspot: true },
+              fields: [
+                defineField({ name: 'alt', title: 'Texto alternativo', type: 'string' }),
+                defineField({ name: 'caption', title: 'Legenda', type: 'string' }),
+              ],
+            }),
+          ],
+          validation: (Rule) => Rule.min(1),
+        }),
+      ],
+      preview: {
+        select: { title: 'title', media: 'images.0' },
+        prepare: ({ title, media }) => ({ title: title || 'Carrossel', subtitle: 'Carrossel de imagens', media }),
+      },
+    }),
+    defineArrayMember({
+      name: 'audio',
+      title: 'Áudio',
+      type: 'object',
+      fields: [
+        defineField({ name: 'title', title: 'Título (opcional)', type: 'string' }),
+        defineField({ name: 'description', title: 'Descrição (opcional)', type: 'text', rows: 2 }),
+        defineField({
+          name: 'file',
+          title: 'Arquivo de áudio',
+          type: 'file',
+          options: { accept: 'audio/*' },
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      preview: {
+        select: { title: 'title', media: 'file.asset' },
+        prepare: ({ title, media }) => ({ title: title || 'Faixa de áudio', subtitle: 'Áudio', media }),
       },
     }),
     defineArrayMember({
