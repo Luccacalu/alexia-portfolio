@@ -24,6 +24,12 @@
       }
     },
     {
+      "source": "/static/(.*)",
+      "destination": {
+        "service": "studio"
+      }
+    },
+    {
       "source": "/(.*)",
       "destination": {
         "service": "app"
