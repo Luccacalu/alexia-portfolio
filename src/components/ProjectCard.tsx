@@ -29,7 +29,7 @@ export function ProjectCard({ p }: { p: ProjectCardData }) {
           )}
         </div>
       </div>
-      <div className="card-caption">{p.title}</div>
+      {/* <div className="card-caption">{p.title}</div> */}
     </Link>
   );
 }
