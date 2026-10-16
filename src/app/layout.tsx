@@ -1,14 +1,16 @@
 import type { Metadata, Viewport } from 'next';
-import '@fontsource-variable/recursive/slnt.css';
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/newsreader';
 import './globals.css';
 import Menu from '@/components/Menu';
 import { DevSanityRefresh } from '@/components/DevSanityRefresh';
+import { ContactCta } from '@/components/ContactCta';
 import { getSettings } from '@/lib/sanity';
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#173f63',
+  themeColor: '#ffffff',
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             enabled={process.env.NODE_ENV === 'development' && Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID)}
           />
           {children}
+          <ContactCta />
         </div>
       </body>
     </html>

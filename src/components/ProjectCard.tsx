@@ -1,18 +1,7 @@
 import Link from 'next/link';
 import type { ProjectCardData } from '@/lib/types';
 
-const DEFAULT_COLOR = '#ef9bc0';
-
-function textOn(hex: string): string {
-  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
-  if (!m) return '#112a43';
-  const n = parseInt(m[1], 16);
-  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  return (r * 299 + g * 587 + b * 114) / 1000 > 140 ? '#112a43' : '#fff4e7';
-}
-
 export function ProjectCard({ p }: { p: ProjectCardData }) {
-  const bg = p.cardColor || DEFAULT_COLOR;
   return (
     <Link href={p.path} className="card">
       <div className="card-media">
@@ -22,10 +11,9 @@ export function ProjectCard({ p }: { p: ProjectCardData }) {
         ) : (
           <div className="placeholder">Capa</div>
         )}
-        <div className="card-hover" style={{ background: bg, color: textOn(bg) }} aria-hidden="true">
+        <div className="card-hover" aria-hidden="true">
           <span className="card-spark card-spark-one" />
           <span className="card-spark card-spark-two" />
-          <span className="card-orbit" />
           {p.client && (
             <>
               <span className="k">Cliente</span>
@@ -39,10 +27,6 @@ export function ProjectCard({ p }: { p: ProjectCardData }) {
               <span className="v">{p.agency}</span>
             </>
           )}
-          <span className="d" />
-          <span className="corner">
-            <i>+</i>
-          </span>
         </div>
       </div>
       <div className="card-caption">{p.title}</div>

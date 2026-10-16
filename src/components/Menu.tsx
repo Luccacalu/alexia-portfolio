@@ -4,15 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-function headerTheme(pathname: string): string {
-  if (pathname.startsWith('/projects')) return 'theme-projects';
-  if (pathname.startsWith('/categories')) return 'theme-categories';
-  if (pathname.startsWith('/about')) return 'theme-about';
-  if (pathname.startsWith('/contact')) return 'theme-contact';
-  if (pathname.startsWith('/project/')) return 'theme-project';
-  return 'theme-home';
-}
-
 export default function Menu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -27,7 +18,7 @@ export default function Menu() {
 
   return (
     <>
-      <header className={`header ${headerTheme(pathname)} ${open ? 'open' : ''}`}>
+      <header className={`header ${open ? 'open' : ''}`}>
         <div className="cell l">
           <Link href="/" className="logo" aria-label="Início">
             <img src="/rooster.png" alt="" />

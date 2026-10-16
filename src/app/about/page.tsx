@@ -16,7 +16,7 @@ export default async function About() {
 
       <section className="person">
         <div>
-          <h2 className="display">
+          <h2 className="display person-name">
             {s.firstName}
             <br />
             {s.lastName}
