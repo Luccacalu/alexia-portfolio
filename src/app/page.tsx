@@ -1,16 +1,18 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getSettings } from '@/lib/sanity';
+import HomeEffects from '@/components/HomeEffects';
 
 export default async function Home() {
   const s = await getSettings();
   return (
     <main className="home">
       <div className="stars" aria-hidden="true">
-        {Array.from({ length: 10 }, (_, i) => (
+        {Array.from({ length: 26 }, (_, i) => (
           <span key={i} />
         ))}
       </div>
+      <HomeEffects />
       <p className="intro pre">{s.heroIntro}</p>
 
       {s.heroLogoUrl ? (
