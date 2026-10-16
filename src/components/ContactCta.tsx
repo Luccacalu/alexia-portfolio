@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation';
 
 export function ContactCta() {
   const pathname = usePathname();
-  if (pathname.replace(/\/$/, '') === '/contact') return null;
+  const normalizedPath = pathname.replace(/\/$/, '');
+  if (normalizedPath === '' || normalizedPath === '/contact') return null;
 
   return (
     <section className="contact-cta" aria-label="Entre em contato">
