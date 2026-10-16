@@ -138,6 +138,9 @@ const PROJECT_QUERY = `*[_type == "project"] | order(order asc, year desc){
 
 const SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
   siteTitle, description, firstName, lastName, role, heroIntro, beginLead, beginQuestion, aboutIntro,
+  "heroLogoUrl": heroLogo.asset->url,
+  "heroLogoWidth": heroLogo.asset->metadata.dimensions.width,
+  "heroLogoHeight": heroLogo.asset->metadata.dimensions.height,
   "portraitUrl": portrait.asset->url,
   sections[]{title, items[]{label, detail}},
   clientGroups[]{category, "logos": logos[]{ "url": asset->url, "name": coalesce(alt, "") }},
@@ -275,6 +278,7 @@ export async function getSettings(): Promise<Settings> {
     ...s,
     beginLead: s.beginLead || sampleSettings.beginLead,
     beginQuestion: s.beginQuestion || sampleSettings.beginQuestion,
+    heroLogoUrl: img(s.heroLogoUrl),
     portraitUrl: img(s.portraitUrl),
     sections: s.sections ?? [],
     clientGroups: (s.clientGroups ?? []).map((g: any) => ({ ...g, logos: g.logos ?? [] })),

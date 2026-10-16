@@ -25,6 +25,13 @@ export const siteSettings = defineType({
     defineField({ name: 'description', title: 'Descrição (SEO)', type: 'text', rows: 2, group: 'geral' }),
     defineField({ name: 'firstName', title: 'Nome', type: 'string', group: 'geral' }),
     defineField({ name: 'lastName', title: 'Sobrenome', type: 'string', group: 'geral' }),
+    defineField({
+      name: 'heroLogo',
+      title: 'Logo principal da home',
+      description: 'Substitui o nome em texto na home. Sem imagem, o nome é exibido com a fonte especial.',
+      type: 'image',
+      group: 'geral',
+    }),
     defineField({ name: 'role', title: 'Cargo', type: 'string', group: 'geral' }),
     defineField({ name: 'heroIntro', title: 'Texto de abertura da home', type: 'text', rows: 3, group: 'geral' }),
     defineField({

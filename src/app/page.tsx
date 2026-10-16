@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getSettings } from '@/lib/sanity';
 
 export default async function Home() {
@@ -12,10 +13,23 @@ export default async function Home() {
       </div>
       <p className="intro pre">{s.heroIntro}</p>
 
-      <h1 className="display names">
-        <span>{s.firstName}</span>
-        <span>{s.lastName}</span>
-      </h1>
+      {s.heroLogoUrl ? (
+        <h1 className="display home-logo-title">
+          <Image
+            className="home-logo"
+            src={s.heroLogoUrl}
+            alt={`${s.firstName} ${s.lastName}`.trim()}
+            width={s.heroLogoWidth || 1}
+            height={s.heroLogoHeight || 1}
+            priority
+          />
+        </h1>
+      ) : (
+        <h1 className="display names">
+          <span>{s.firstName}</span>
+          <span>{s.lastName}</span>
+        </h1>
+      )}
 
       <div className="begin">
         <p className="pre">{s.beginLead}</p>

@@ -148,6 +148,9 @@ export type Settings = {
   lastName: string;
   role: string;
   heroIntro: string;
+  heroLogoUrl?: string;
+  heroLogoWidth?: number;
+  heroLogoHeight?: number;
   beginLead: string;
   beginQuestion: string;
   aboutIntro: string;

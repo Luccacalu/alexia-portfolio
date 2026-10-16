@@ -216,6 +216,20 @@ button { font: inherit; }
   width: 100%;
 }
 .home .names span { min-width: 0; }
+.home .home-logo-title {
+  order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.home .home-logo {
+  width: auto;
+  height: auto;
+  max-width: min(82vw, 520px);
+  max-height: min(50svh, 480px);
+  object-fit: contain;
+}
 .begin { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
 .begin { order: 3; }
 .begin p { max-width: 48rem; color: var(--fg); font-size: clamp(20px, 3vw, 42px); line-height: 1.2; }
@@ -908,6 +922,7 @@ button { font: inherit; }
 @media (max-width: 640px) {
   .pn-next { text-align: left; }
   .home .names { font-size: clamp(40px, 16vw, 72px); }
+  .home .home-logo { max-width: min(82vw, 380px); max-height: 45svh; }
   .contact .soc { gap: 8px 20px; }
   .contact-cta { padding-inline: max(var(--pad), env(safe-area-inset-left)); }
 }
