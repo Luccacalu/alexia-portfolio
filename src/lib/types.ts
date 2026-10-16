@@ -74,6 +74,15 @@ export type VideoBlock = {
   caption?: string;
 };
 
+export type VideoFileBlock = {
+  _key: string;
+  _type: 'videoFile';
+  url: string;
+  mimeType?: string;
+  filename?: string;
+  caption?: string;
+};
+
 export type ProjectVideo = {
   _key: string;
   title?: string;
@@ -101,7 +110,15 @@ export type CardsBlock = {
   items: ProjectCardData[];
 };
 
-export type BodyBlock = PortableTextBlock | FigureBlock | GalleryBlock | CarouselBlock | AudioBlock | VideoBlock | CardsBlock;
+export type BodyBlock =
+  | PortableTextBlock
+  | FigureBlock
+  | GalleryBlock
+  | CarouselBlock
+  | AudioBlock
+  | VideoBlock
+  | VideoFileBlock
+  | CardsBlock;
 
 export type ProjectCardData = {
   slug: string;

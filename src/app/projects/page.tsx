@@ -9,7 +9,7 @@ export default async function Projects() {
   const projects = await getProjects();
   return (
     <main>
-      <div className="page-head">
+      <div className="page-head projects-head">
         <h1 className="display">Todos os projetos</h1>
         <span className="dash" />
       </div>

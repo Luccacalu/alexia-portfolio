@@ -10,7 +10,7 @@ export default async function Categories() {
   const projects = await getProjects();
   return (
     <main>
-      <div className="page-head">
+      <div className="page-head categories-head">
         <h1 className="display">Categorias</h1>
         <span className="dash" />
       </div>

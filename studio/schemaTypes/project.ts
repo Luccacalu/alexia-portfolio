@@ -65,7 +65,7 @@ export const project = defineType({
       name: 'cardColor',
       title: 'Cor do card (ao passar o mouse)',
       type: 'string',
-      description: 'Código hexadecimal, ex.: #b8ff00. Se vazio, usa verde-limão.',
+      description: 'Código hexadecimal no formato #RRGGBB. Se vazio, usa rosa #ef9bc0.',
       validation: (r) =>
         r.regex(/^#[0-9a-fA-F]{6}$/, { name: 'hex', invert: false }).warning('Use o formato #RRGGBB'),
     }),
@@ -92,6 +92,7 @@ export const project = defineType({
           name: 'videoStory',
           title: 'Vídeo com roteiro',
           type: 'object',
+          initialValue: { video: { _type: 'file' } },
           fields: [
             defineField({ name: 'title', title: 'Título do vídeo (opcional)', type: 'string' }),
             defineField({

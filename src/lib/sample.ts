@@ -112,7 +112,7 @@ const figure = (layout: 'content' | 'wide' | 'full' = 'wide'): BodyBlock => ({
   layout,
 });
 
-const colors = ['#b8ff00', '#ffd84d', '#ff7a59', '#8ec5ff', '#f2efe9'];
+const colors = ['#ef9bc0', '#ffd84d', '#ff7a59', '#8ec5ff', '#f2efe9'];
 
 type Draft = Omit<Project, 'path'>;
 

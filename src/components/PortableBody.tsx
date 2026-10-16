@@ -1,5 +1,14 @@
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
-import type { AudioBlock, BodyBlock, CarouselBlock, CardsBlock, FigureBlock, GalleryBlock, VideoBlock } from '@/lib/types';
+import type {
+  AudioBlock,
+  BodyBlock,
+  CarouselBlock,
+  CardsBlock,
+  FigureBlock,
+  GalleryBlock,
+  VideoBlock,
+  VideoFileBlock,
+} from '@/lib/types';
 import { AudioPlayer } from './AudioPlayer';
 import { ImageCarousel } from './ImageCarousel';
 import { ProjectGrid } from './ProjectCard';
@@ -71,6 +80,28 @@ function Video({ value }: { value: VideoBlock }) {
   );
 }
 
+function VideoFile({ value }: { value: VideoFileBlock }) {
+  if (!value.url) return null;
+  return (
+    <figure className="pt-video">
+      <video
+        className="pt-video-file"
+        controls
+        controlsList="nodownload noremoteplayback"
+        disablePictureInPicture
+        disableRemotePlayback
+        playsInline
+        preload="metadata"
+        aria-label={value.filename || 'Vídeo'}
+      >
+        <source src={value.url} type={value.mimeType} />
+        Seu navegador não consegue reproduzir este formato.
+      </video>
+      {value.caption && <figcaption>{value.caption}</figcaption>}
+    </figure>
+  );
+}
+
 function Cards({ value }: { value: CardsBlock }) {
   if (!value.items?.length) return null;
   return (
@@ -113,6 +144,7 @@ const components: PortableTextComponents = {
     carousel: ({ value }) => <ImageCarousel value={value as CarouselBlock} />,
     audio: ({ value }) => <AudioPlayer value={value as AudioBlock} />,
     video: ({ value }) => <Video value={value} />,
+    videoFile: ({ value }) => <VideoFile value={value} />,
     cards: ({ value }) => <Cards value={value} />,
   },
 };

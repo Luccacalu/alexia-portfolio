@@ -75,7 +75,7 @@ export function AudioPlayer({ value }: { value: AudioBlock }) {
             onChange={seek}
             aria-label={`Progresso de ${value.title || 'áudio'}`}
             aria-valuetext={`${formatTime(currentTime)} de ${formatTime(duration)}`}
-            style={{ background: `linear-gradient(to right, var(--accent) ${progress}%, rgba(255,255,255,.18) ${progress}%)` }}
+            style={{ background: `linear-gradient(to right, var(--red) ${progress}%, rgba(17,42,67,.2) ${progress}%)` }}
           />
           <div className="pt-audio-times" aria-hidden="true">
             <span>{formatTime(currentTime)}</span>

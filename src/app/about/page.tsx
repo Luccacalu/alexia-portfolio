@@ -69,26 +69,6 @@ export default async function About() {
         </section>
       )}
 
-      {s.awardGroups.length > 0 && (
-        <section>
-          <h2 className="display sec-title">Prêmios</h2>
-          <div className="awards">
-            {s.awardGroups.map((g) => (
-              <div className="agroup" key={g.title}>
-                <h3 className="display">{g.title}</h3>
-                <div className="agrid">
-                  {g.awards.map((a, i) => (
-                    <div key={i}>
-                      <h4>{a.name}</h4>
-                      <p className="pre">{a.result}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
     </main>
   );
 }

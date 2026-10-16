@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import '@fontsource/instrument-serif/400.css';
-import '@fontsource-variable/inter';
+import '@fontsource-variable/recursive/slnt.css';
 import './globals.css';
 import Menu from '@/components/Menu';
 import { DevSanityRefresh } from '@/components/DevSanityRefresh';
@@ -9,7 +8,7 @@ import { getSettings } from '@/lib/sanity';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0e0e0e',
+  themeColor: '#173f63',
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,6 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: base ? new URL(base) : undefined,
     title: { default: s.siteTitle, template: `%s | ${s.siteTitle}` },
     description: s.description,
+    icons: { icon: '/rooster.png', apple: '/rooster.png' },
     openGraph: { title: s.siteTitle, description: s.description, type: 'website' },
     twitter: { card: 'summary_large_image', title: s.siteTitle, description: s.description },
   };

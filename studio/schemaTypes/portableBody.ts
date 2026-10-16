@@ -140,6 +140,7 @@ export const portableBody = defineField({
       name: 'audio',
       title: 'Áudio',
       type: 'object',
+      initialValue: { file: { _type: 'file' } },
       fields: [
         defineField({ name: 'title', title: 'Título (opcional)', type: 'string' }),
         defineField({ name: 'description', title: 'Descrição (opcional)', type: 'text', rows: 2 }),
@@ -167,6 +168,26 @@ export const portableBody = defineField({
       preview: {
         select: { title: 'url' },
         prepare: ({ title }) => ({ title: title || 'Vídeo', subtitle: 'Vídeo' }),
+      },
+    }),
+    defineArrayMember({
+      name: 'videoFile',
+      title: 'Vídeo (arquivo)',
+      type: 'object',
+      initialValue: { file: { _type: 'file' } },
+      fields: [
+        defineField({
+          name: 'file',
+          title: 'Arquivo de vídeo',
+          type: 'file',
+          options: { accept: 'video/*' },
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({ name: 'caption', title: 'Legenda', type: 'string' }),
+      ],
+      preview: {
+        select: { title: 'caption', media: 'file.asset' },
+        prepare: ({ title, media }) => ({ title: title || 'Vídeo', subtitle: 'Vídeo enviado', media }),
       },
     }),
     defineArrayMember({

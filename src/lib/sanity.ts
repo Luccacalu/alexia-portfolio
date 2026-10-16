@@ -51,6 +51,12 @@ const PROJECT_QUERY = `*[_type == "project"] | order(order asc, year desc){
         "mimeType": file.asset->mimeType,
         "filename": file.asset->originalFilename
       },
+      _type == "videoFile" => {
+        ...,
+        "url": file.asset->url,
+        "mimeType": file.asset->mimeType,
+        "filename": file.asset->originalFilename
+      },
       _type == "gallery" => {
         images[]{ "url": asset->url, alt, caption }
       },
@@ -117,6 +123,12 @@ const PROJECT_QUERY = `*[_type == "project"] | order(order asc, year desc){
       "mimeType": file.asset->mimeType,
       "filename": file.asset->originalFilename
     },
+    _type == "videoFile" => {
+      ...,
+      "url": file.asset->url,
+      "mimeType": file.asset->mimeType,
+      "filename": file.asset->originalFilename
+    },
     _type == "cards" => {
       heading,
       "items": items[]->{ ${CARD_PROJECTION} }
@@ -167,11 +179,14 @@ function mapBody(body: any[] | undefined, pathBySlug: Map<string, string>): Body
     if (b._type === 'carousel') {
       return {
         ...b,
-        images: (b.images ?? []).map((im: any) => ({ ...im, url: img(im.url) })),
+        images: (b.images ?? []).map((im: any) => ({
+          ...im,
+          url: im._type === 'file' ? im.url : img(im.url),
+        })),
       };
     }
     if (b._type === 'audio') {
-      return { ...b, url: img(b.url) };
+      return b;
     }
     if (b._type === 'cards') {
       return {
